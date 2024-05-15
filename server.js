@@ -6,6 +6,9 @@ const redisClient = require("./config/redis")
 
 dotenv.config();
 
+//Routes
+const viewRoutes = require("./routes/views")
+
 const app = express();
 
 db.connect((err) => {
@@ -24,8 +27,6 @@ app.use(express.urlencoded({extended: true}));
 
 const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-    res.render("index")
-})
+app.use("/", viewRoutes)
 
 app.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`,))
