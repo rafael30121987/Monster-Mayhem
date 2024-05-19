@@ -10,33 +10,33 @@ dotenv.config();
 const jwtSecret = process.env.JWTSECRET || "Secret";
 
 exports.register = (req, res) => {
-    try{
+    try {
         const errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.redirect("/register?error" + errors.array()[0].msg)
-        };
+            return res.redirect("/register?error=" + errors.array()[0].msg)
+        }
 
         const {username, email, password, confirmPassword} = req.body;
 
         if(password !== confirmPassword){
-            return res.redirect("/register?error=Password do not match!")
-        };
+            return res.redirect("/register?error=Passwords do not match!");
+        }
 
-        let query  = `SELECT id FROM users WHERE username= '${username}' OR email='${email}'`;
+        let query = `SELECT id FROM users WHERE username='${username}' OR email='${email}'`;
 
-        db.query(query, async(err, result) => {
+        db.query(query, async (err, result) => {
             if(err){
                 throw err;
             }
 
             if(result.length > 0){
-                return res.redirect("/register?error=Username or email is already exist.");
+                return res.redirect("/register?error=Username or email is aleardy taken!");
             }
 
-            const encryptedPassword = await bcrypt.hash(password, 10 );
+            const encryptedPassword = await bcrypt.hash(password, 10);
 
-            query = `CALL creatUser('${username}', '${email}', '${password}')`;
+            query = `CALL createUser('${username}', '${email}', '${encryptedPassword}')`;
 
             db.query(query, (err) => {
                 if(err){
@@ -50,8 +50,8 @@ exports.register = (req, res) => {
                         throw err;
                     }
 
-                    if(result.length === 0 ){
-                        res.redirect("/?Success=Somethinf went wrong!");
+                    if(result.length === 0){
+                        return res.redirect("/register?error=Something went wrong!");
                     }
 
                     let userId = result[0].id;
@@ -69,7 +69,7 @@ exports.register = (req, res) => {
                         res.cookie("user_winnings", 0, {maxAge: 100 * 60 * 60 * 24 * 30 * 6, http: true, secure: false, sameSite: "strict"});
                         res.cookie("user_points", 1000, {maxAge: 100 * 60 * 60 * 24 * 30 * 6, http: true, secure: false, sameSite: "strict"});
                         
-                        res.redirect("/?Success=You have registered you user successfully");
+                        res.redirect("/?success=You have register your user successfully");
                     })
                 })
             })
@@ -77,6 +77,6 @@ exports.register = (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.redirect("/?Success=Somethinf went wrong!");
+        res.redirect("/register?error=Something went wrong!");
     }
 }

@@ -9,7 +9,7 @@ dotenv.config();
 
 //Routes
 const viewRoutes = require("./routes/views");
-const userRoutes = require("./routes/api/user,");
+const userRoutes = require("./routes/api/user");
 
 const app = express();
 
