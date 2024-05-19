@@ -80,3 +80,64 @@ exports.register = (req, res) => {
         res.redirect("/register?error=Something went wrong!");
     }
 }
+
+exports.login = (req, res) => {
+    try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            return res.redirect("/login?error=" + errors.array()[0].msg)
+        }
+
+        const {email, password} = req.body;
+
+        let query = `SELECT * FROM users WHERE email='${email}'`;
+
+        db.query(query, async (err, result) => {
+            if(err){
+                throw err;
+            }
+
+            if(result.length === 0){
+                return res.redirect("/login?error=Email or password is incorrect!");
+            }
+
+            let user = result[0];
+
+            const isMatch = await bcrypt.compare(password, user.password);
+
+            if(!isMatch){
+                return res.redirect("/login?error=Email or password is incorrect!");
+            }
+
+            query = `SELECT user_winnings, user_points FROM user_info WHERE user_id=${user.id}`;
+
+            db.query(query, (err, result) => {
+                if(err){
+                    throw err;
+                }
+
+                let userInfo = result[0];
+
+                const payload = {
+                    id: user.id, username: user.username, email
+                };
+
+                jwt.sign(payload, jwtSecret, (err, token) => {
+                    if(err){
+                        throw err;
+                    }
+
+                    res.cookie("token", token, {maxAge: 1000 * 60 * 60 * 24 * 30 * 6, httpOnly: true, secure: false, sameSite: "strict"})
+                    res.cookie("user_winnings", userInfo.user_winnings, {maxAge: 1000 * 60 * 60 * 24 * 30 * 6, httpOnly: true, secure: false, sameSite: "strict"})
+                    res.cookie("user_points", userInfo.user_points, {maxAge: 1000 * 60 * 60 * 24 * 30 * 6, httpOnly: true, secure: false, sameSite: "strict"})
+
+                    res.redirect("/?success=You have logged in successfully");
+                })
+            })
+        })
+    } catch (err) {
+        console.log(err);
+        res.redirect("/login?error=Something went wrong!")
+    }
+}

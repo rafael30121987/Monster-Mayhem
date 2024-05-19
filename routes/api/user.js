@@ -1,6 +1,6 @@
 const{Router} = require("express");
 const{check} = require("express-validator");
-const{register} = require("../../controller/api/user");
+const{register, login} = require("../../controller/api/user");
 
 const router = Router();
 
@@ -11,5 +11,10 @@ router.post("/register", [
     check('password',"Password is required").notEmpty(),
     check('confirmPassword',"Please confirm your password").notEmpty(),
 ], register)
+
+router.post("/login", [
+    check('email', "Email is required").notEmpty(),
+    check('password',"Password is required").notEmpty(),
+], login)
 
 module.exports = router;
