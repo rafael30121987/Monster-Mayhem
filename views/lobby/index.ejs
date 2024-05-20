@@ -1,0 +1,43 @@
+<%- include('../include/header') %>
+
+<div class="container">
+    <%- include('../include/partials/responseMessage') %>
+
+    <div class="lobby" id="lobby">
+        <div class="my-info">
+            <h4>my info</h4>
+            <ul>
+                <li>
+                    <label>Username</label>
+                    <span id="username">test username</span>
+                </li>
+                <li>
+                    <label>winnings</label>
+                    <span id="winnings">test winnings</span>
+                </li>
+                <li>
+                    <label>points</label>
+                    <span id="points">test 1000</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="rooms">
+            <h1>Rooms</h1>
+
+            <div class="room">
+                <div class="room-info">
+                    <span>Room: <strong>teste</strong> </span>
+                    <span id="beginner-room">123 room</span>
+                </div>
+                <a href="/games?Roomteste">Join Room</a>
+            </div>
+
+            <p class="total" id="total-users">total users: 100</p>
+            <p class="total" id="total-users">total users: 10</p>
+        </div>
+    </div>
+
+</div>
+
+<%- include('../include/footer') %>
