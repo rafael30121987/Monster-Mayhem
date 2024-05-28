@@ -1,23 +1,33 @@
 <%- include('../include/header') %>
 
 <div class="container">
+    <%- include('../include/partials/spinner') %>
+    
     <%- include('../include/partials/responseMessage') %>
 
-    <div class="lobby" id="lobby">
+    <div class="lobby hidden" id="lobby">
         <div class="my-info">
-            <h4>my info</h4>
+            <h4>My Info</h4>
+
             <ul>
                 <li>
                     <label>Username</label>
-                    <span id="username">test username</span>
+                    <span id="username">testuser</span>
                 </li>
+
                 <li>
-                    <label>winnings</label>
-                    <span id="winnings">test winnings</span>
+                    <label>Rank</label>
+                    <span id="rank">beginner</span>
                 </li>
+
                 <li>
-                    <label>points</label>
-                    <span id="points">test 1000</span>
+                    <label>Points</label>
+                    <span id="points">1000</span>
+                </li>
+
+                <li>
+                    <label>Winnings</label>
+                    <span id="winnings">0</span>
                 </li>
             </ul>
         </div>
@@ -27,17 +37,55 @@
 
             <div class="room">
                 <div class="room-info">
-                    <span>Room: <strong>teste</strong> </span>
-                    <span id="beginner-room">123 room</span>
+                    <span>Rank: <strong>Beginner</strong></span>
+                    <span id="beginner-rooms">20 rooms</span>
                 </div>
-                <a href="/games?Roomteste">Join Room</a>
+
+                <a href="/games?rank=beginner">Play</a>
             </div>
 
-            <p class="total" id="total-users">total users: 100</p>
-            <p class="total" id="total-users">total users: 10</p>
+            <div class="room">
+                <div class="room-info">
+                    <span>Rank: <strong>Intermediate</strong></span>
+                    <span id="intermediate-rooms">20 rooms</span>
+                </div>
+
+                <a href="/games?rank=intermediate">Play</a>
+            </div>
+
+            <div class="room">
+                <div class="room-info">
+                    <span>Rank: <strong>Advanced</strong></span>
+                    <span id="advanced-rooms">20 rooms</span>
+                </div>
+
+                <a href="/games?rank=advanced">Play</a>
+            </div>
+
+            <div class="room">
+                <div class="room-info">
+                    <span>Rank: <strong>Expert</strong></span>
+                    <span id="expert-rooms">20 rooms</span>
+                </div>
+
+                <a href="/games?rank=expert">Play</a>
+            </div>
+
+            <p class="total" id="total-users">Total Users: 10</p>
+
+            <p class="total" id="total-rooms">Total Rooms: 80</p>
         </div>
     </div>
-
 </div>
+
+
+<%- include('../include/partials/chat') %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/spinner.js"></script>
+<script src="js/index.js"></script>
+<script src="js/lobby.js"></script>
+<script src="js/responseMessage.js"></script>
+<script src="js/chat.js"></script>
 
 <%- include('../include/footer') %>

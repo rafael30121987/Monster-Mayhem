@@ -3,18 +3,17 @@
 <div class="container">
     <%- include('../include/partials/responseMessage') %>
 
-    <form action="/api/login" method="POST" class="flex-center-columm auth-form">
-        
-        <h1 class="flex-center-row">Login <img src="/assets/icons/user-check.svg" alt="User"> </h1>
+    <form action="/api/login" method="POST" class="flex-center-column auth-form">
+        <h1 class="flex-center-row">Login <img src="/assets/icons/user-check.svg" alt="User"></h1>
 
         <div class="input-group">
-            <label>EMAIL</label>
-            <input type="text" name="email" placeholder="Emter your Email...">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email...">
         </div>
 
         <div class="input-group">
             <label>Password</label>
-            <input type="password" name="password" placeholder="Emter your Password...">
+            <input type="password" name="password" placeholder="Enter your password...">
         </div>
 
         <a href="/register" class="redirect-link">Don't have an account?</a>
@@ -23,6 +22,6 @@
     </form>
 </div>
 
-<script src="js/responseMessage.js" ></script>
+<script src="js/responseMessage.js"></script>
 
 <%- include('../include/footer') %>
