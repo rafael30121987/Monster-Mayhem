@@ -165,12 +165,12 @@ closeCreateRoomFormBtn.addEventListener("click", () => {
 
 createRoomForm.addEventListener("submit", handleCreateRoomFormSubmit)
 
+joinRandomBtn.addEventListener("click", () => {
+    socket.emit("join-random", user)
+})
+
 closeJoinRoomFormBtn.addEventListener("click", () => {
     joinRoomFormContainer.classList.add("hidden")
 })
 
 joinRoomForm.addEventListener("submit", handleJoinRoomFormSubmit)
-
-joinRandomBtn.addEventListener("click", () => {
-    socket.emit("join-random", user)
-})

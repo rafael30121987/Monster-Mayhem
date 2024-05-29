@@ -15,7 +15,8 @@ const app = express();
 
 const server = http.createServer(app)
 const viewRoutes = require("./routes/views")
-const apiRoutes = require("./routes/api/user")
+const apiRoutes = require("./routes/api/user");
+const { createRoom, joinRoom } = require("./util/room");
 
 db.connect((err) => {
     if (err) {
@@ -130,6 +131,95 @@ io.on("connection", (socket) => {
         })
     })
 
+    socket.on("create-room", (roomId, time, user, password=null) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                socket.emit("error", `Room with id '${roomId}' already exists!`)
+            }else{
+                if(password){
+                    createRoom(roomId, user, time, password)
+                }else{
+                    createRoom(roomId, user, time)
+                }
+
+                socket.emit("room-created")
+            }
+        })
+    })
+
+    socket.on("join-room", (roomId, user, password=null) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let room = JSON.parse(reply);
+
+                if(room.players[1] === null){
+                    if(room.password && (!password || room.password !== password)){
+                        socket.emit("error", "To join the room you need the correct password!")
+
+                        return
+                    }
+
+                    joinRoom(roomId, user);
+
+                    if(room.password && password !== ""){
+                        socket.emit("room-joined", roomId, password);
+                    }else{
+                        socket.emit("room-joined", roomId);
+                    }
+                }else{
+                    socket.emit("error", "The room is full!")
+                }
+            }else{
+                socket.emit("error", `Room with id '${roomId}' does not exist!`)
+            }
+        })
+    })
+
+    socket.on("join-random", (user) => {
+        redisClient.get("rooms", (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let rooms = JSON.parse(reply);
+
+                let room = rooms.find(room => room.players[1] === null && !room.password);
+
+                if(room){
+                    joinRoom(room.id, user);
+                    socket.emit("room-joined", room.id);
+                }else{
+                    socket.emit("error", "No room found!")
+                }
+            }else{
+                socket.emit("error", "No room found!")
+            }
+        })
+    })
+
+    socket.on('get-rooms', (rank) => {
+        redisClient.get("rooms", (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let rooms = JSON.parse(reply);
+
+                if(rank === 'all'){
+                    socket.emit("receive-rooms", rooms)
+                }else{
+                    let filteredRooms = rooms.filter(room => room.players[0].user_rank === rank);
+
+                    socket.emit("receive-rooms", filteredRooms)
+                }
+            }else{
+                socket.emit("receive-rooms", [])
+            }
+        })
+    })
+
     socket.on("disconnect", () => {
         let socketId = socket.id;
 
@@ -140,7 +230,7 @@ io.on("connection", (socket) => {
                 let user = JSON.parse(reply);
 
                 if(user.room){
-                    /**redisClient.get(user.room, (err, reply) => {
+                    redisClient.get(user.room, (err, reply) => {
                         if(err) throw err;
 
                         if(reply){
@@ -152,13 +242,15 @@ io.on("connection", (socket) => {
                         }
                     })
 
-                    removeRoom(user.room, user.user_rank)*/
+                    removeRoom(user.room, user.user_rank)
                 }
             }
         })
 
         removeUser(socketId);
     })
+
+
 
     socket.on("send-message", (message, user, roomId=null) => {
         if(roomId){

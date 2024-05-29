@@ -13,7 +13,7 @@ const fetchData = (url, callback) => {
     .catch(err => console.log(err.message))
 }
 
-/**
+
 socket.on("error", (errorMessage) => {
     window.location.href = "http://localhost:5000/games?error=" + errorMessage
-})  */
+})
