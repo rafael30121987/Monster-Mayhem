@@ -29,3 +29,35 @@ exports.getGamesPage = (req, res) => {
 
     res.render("games", {authorized: true});
 }
+
+exports.getRoomPage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("room", {authorized: true});
+} 
+
+exports.getStatsPage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("stats", {authorized: true});
+} 
+
+exports.getPlayedGamesPage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("stats/playedGames", {authorized: true});
+}
+
+exports.getProfilePage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("profile", {authorized: true});
+}

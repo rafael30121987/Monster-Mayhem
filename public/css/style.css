@@ -822,16 +822,16 @@ nav{
     font-size: 1.2rem;
 }
 
-.chess-board{
+.mayhem-board{
     width: 600px;
     height: 600px;
     display: grid;
-    grid-template-rows: repeat(8, calc(600px / 8));
-    grid-template-columns: repeat(8, calc(600px / 8));
+    grid-template-rows: repeat(10, calc(600px / 10));
+    grid-template-columns: repeat(10, calc(600px / 10));
     margin: 35px 0;
 }
 
-.chess-board .box{
+.mayhem-board .box{
     width: 100%;
     height: 100%;
     display: flex;
@@ -841,14 +841,17 @@ nav{
     position: relative;
 }
 
-.chess-board .box:nth-child(-2n+8), 
-.chess-board .box:nth-child(8) ~ .box:nth-child(-2n+15), 
-.chess-board .box:nth-child(16) ~ .box:nth-child(-2n+24),
-.chess-board .box:nth-child(24) ~ .box:nth-child(-2n+31),
-.chess-board .box:nth-child(32) ~ .box:nth-child(-2n+40),
-.chess-board .box:nth-child(40) ~ .box:nth-child(-2n+47),
-.chess-board .box:nth-child(48) ~ .box:nth-child(-2n+56),
-.chess-board .box:nth-child(56) ~ .box:nth-child(-2n+63) {
+.mayhem-board .box:nth-child(-2n+10), 
+.mayhem-board .box:nth-child(10) ~ .box:nth-child(-2n+19), 
+.mayhem-board .box:nth-child(21) ~ .box:nth-child(-2n+30),
+.mayhem-board .box:nth-child(30) ~ .box:nth-child(-2n+39),
+.mayhem-board .box:nth-child(41) ~ .box:nth-child(-2n+50),
+.mayhem-board .box:nth-child(50) ~ .box:nth-child(-2n+59),
+.mayhem-board .box:nth-child(61) ~ .box:nth-child(-2n+70),
+.mayhem-board .box:nth-child(70) ~ .box:nth-child(-2n+79),
+.mayhem-board .box:nth-child(81) ~ .box:nth-child(-2n+90),
+.mayhem-board .box:nth-child(90) ~ .box:nth-child(-2n+99),
+.mayhem-board .box:nth-child(101) ~ .box:nth-child(-2n+110) {
     background: var(--main-color-darker);
 }
 
@@ -869,7 +872,7 @@ nav{
 .display-position-left::before{
     position: absolute;
     top: 50%;
-    left: -25%;
+    left: -40%;
     transform: translateY(-50%);
     color: white;
     font-size: 1rem;
@@ -877,78 +880,95 @@ nav{
 }
 
 .display-position-left:nth-child(1)::before{
+    content: "10";
+}
+
+.display-position-left:nth-child(11)::before{
+    content: "9";
+}
+
+.display-position-left:nth-child(21)::before{
     content: "8";
 }
 
-.display-position-left:nth-child(9)::before{
+.display-position-left:nth-child(31)::before{
     content: "7";
 }
 
-.display-position-left:nth-child(17)::before{
+.display-position-left:nth-child(41)::before{
     content: "6";
 }
 
-.display-position-left:nth-child(25)::before{
+.display-position-left:nth-child(51)::before{
     content: "5";
 }
 
-.display-position-left:nth-child(33)::before{
+.display-position-left:nth-child(61)::before{
     content: "4";
 }
 
-.display-position-left:nth-child(41)::before{
+.display-position-left:nth-child(71)::before{
     content: "3";
 }
 
-.display-position-left:nth-child(49)::before{
+.display-position-left:nth-child(81)::before{
     content: "2";
 }
 
-.display-position-left:nth-child(57)::before{
+.display-position-left:nth-child(91)::before{
     content: "1";
 }
+
 
 .display-position-bottom::after{
     content: 'a';
     position: absolute;
     left: 50%;
-    bottom: -35%;
+    bottom: -45%;
     transform: translateX(-50%);
     color: white;
     font-size: 1rem;
     font-weight: 300;
 }
 
-.display-position-bottom:nth-child(57)::after{
+.display-position-bottom:nth-child(91)::after{
     content: "A";
 }
 
-.display-position-bottom:nth-child(58)::after{
+.display-position-bottom:nth-child(92)::after{
     content: "B";
 }
 
-.display-position-bottom:nth-child(59)::after{
+.display-position-bottom:nth-child(93)::after{
     content: "C";
 }
 
-.display-position-bottom:nth-child(60)::after{
+.display-position-bottom:nth-child(94)::after{
     content: "D";
 }
 
-.display-position-bottom:nth-child(61)::after{
+.display-position-bottom:nth-child(95)::after{
     content: "E";
 }
 
-.display-position-bottom:nth-child(62)::after{
+.display-position-bottom:nth-child(96)::after{
     content: "F";
 }
 
-.display-position-bottom:nth-child(63)::after{
+.display-position-bottom:nth-child(97)::after{
     content: "G";
 }
 
-.display-position-bottom:nth-child(64)::after{
+.display-position-bottom:nth-child(98)::after{
     content: "H";
+}
+
+.display-position-bottom:nth-child(99)::after{
+    content: "I";
+}
+
+.display-position-bottom:nth-child(100)::after{
+    content: "J";
 }
 
 .captured-pieces{
