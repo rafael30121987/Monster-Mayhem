@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app)
 const viewRoutes = require("./routes/views")
 const apiRoutes = require("./routes/api/user");
-const { createRoom, joinRoom } = require("./util/room");
+const { createRoom, joinRoom, removeRoom } = require("./util/room");
 
 db.connect((err) => {
     if (err) {
@@ -42,7 +42,7 @@ const io = socketIO(server);
 io.on("connection", (socket) => {
     socket.on('user-connected', (user, roomId=null) => {
         if(roomId){
-            /**redisClient.get(roomId, (err, reply) => {
+            redisClient.get(roomId, (err, reply) => {
                 if(err) throw err
 
                 if(reply){
@@ -93,10 +93,24 @@ io.on("connection", (socket) => {
                 }else{
                     socket.emit("error", "The room does not exist")
                 }
-            })*/
+            })
         }else{
             newUser(socket.id, user);
         }
+    })
+
+    socket.on("get-game-details", (roomId, user) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let room = JSON.parse(reply);
+
+                let details = {players: room.players, time: room.time}
+
+                socket.emit("receive-game-details", details)
+            }
+        })
     })
 
     socket.on('send-total-rooms-and-users', () => {
@@ -220,6 +234,25 @@ io.on("connection", (socket) => {
         })
     })
 
+    socket.on('move-made', (roomId, move) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let room = JSON.parse(reply);
+
+                room.moves.push(move);
+
+                redisClient.set(roomId, JSON.stringify(room));
+
+                socket.to(roomId).emit('enemy-moved', move)
+                
+            }else{
+                socket.emit("error", "Something went wrong with the connection")
+            }
+        })
+    })
+
     socket.on("disconnect", () => {
         let socketId = socket.id;
 
@@ -249,8 +282,6 @@ io.on("connection", (socket) => {
 
         removeUser(socketId);
     })
-
-
 
     socket.on("send-message", (message, user, roomId=null) => {
         if(roomId){
